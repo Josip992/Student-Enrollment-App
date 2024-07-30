@@ -79,4 +79,12 @@ Functionality and security are key aspects, but usability of the interface and c
 
 ![Capture4](https://github.com/user-attachments/assets/3e838e3f-2790-4fb6-919f-7952ea2d550e)
 
+![Capture](https://github.com/user-attachments/assets/e795c1c9-231b-41cb-9733-d4e393cebde6)
 
+![Capture1](https://github.com/user-attachments/assets/157b938b-15ad-44b8-903e-593c93f390ae)
+
+![Capture2](https://github.com/user-attachments/assets/24b5c6cc-3339-4262-9873-4ca3ea5befea)
+
+![Capture4](https://github.com/user-attachments/assets/7d81dc1f-61f5-4107-8a8a-3be3f22b0b92)
+
+![Capture5](https://github.com/user-attachments/assets/3aaf43fc-46fa-4aa1-a08b-dabcb274f00e)
