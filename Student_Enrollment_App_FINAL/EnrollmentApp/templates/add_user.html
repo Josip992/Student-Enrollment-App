@@ -1,0 +1,88 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add User</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+</head>
+<body style="background-color:#ccc">
+    <nav>
+        <div class="nav-left">
+            <a href="{% url 'success' %}">Home</a>
+            <a href="{% url 'add_subject' %}">Add subject</a>
+            <a href="{% url 'add_user' %}" class="current">Add user</a>
+            <a href="{% url 'create_enrollment' %}">Enroll student</a>
+        </div>
+        <div class="nav-right">
+            {% csrf_token %}
+            <br>
+            {% if user %}
+              Logged in as {{ user.username }}.
+              <a href="{% url 'user_list' %}">Delete user</a>
+              <a href="{% url 'logout' %}" class="logout">Logout</a>
+            {% else %}
+              No user created yet.
+            {% endif %}
+          </div>
+    </nav>
+    <br>
+
+    {% if error_message %}
+        <p>{{ error_message }}</p>
+    {% endif %}
+    <div class="form_container">
+    <form method="post" action="{% url 'add_user' %}">
+        {% csrf_token %}
+        <table>
+            {% csrf_token %}
+            <tr>
+                <br><br>
+                <td><label for="username">Username:</label></td>
+                <td><input type="text" id="username" name="username" required></td>
+            </tr>
+            <tr>
+                <td><label for="password">Password:</label></td>
+                <td><input type="password" id="password" name="password" required></td>
+            </tr>
+            <tr>
+                <td><label for="repeat_password">Repeat Password:</label></td>
+                <td><input type="password" id="repeat_password" name="repeat_password" required></td>
+            </tr>
+            <tr>
+                <td><label for="first_name">First Name:</label></td>
+                <td><input type="text" id="first_name" name="first_name" required></td>
+            </tr>
+            <tr>
+                <td><label for="last_name">Last Name:</label></td>
+                <td><input type="text" id="last_name" name="last_name" required></td>
+            </tr>
+            <tr>
+                <td><label for="email">Email:</label></td>
+                <td><input type="email" id="email" name="email" required></td>
+            </tr>
+            <tr>
+                <td><label for="role">Role:</label></td>
+                <td>
+                    <select id="role" name="role" required>
+                        <option value="student">Student</option>
+                        <option value="administrator">Administrator</option>
+                        <option value="profesor">Profesor</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td><label for="status">Status:</label></td>
+                <td>
+                    <select id="status" name="status" required>
+                        <option value="none">None</option>
+                        <option value="redovan">Redovan</option>
+                        <option value="izvanredan">Izvanredan</option>
+                    </select>
+                </td>
+            </tr>   
+        </table>
+        <input type="submit" value="Submit">
+    </form>
+    </div>
+</body>
+</html>

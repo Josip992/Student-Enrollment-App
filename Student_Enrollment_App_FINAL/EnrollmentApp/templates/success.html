@@ -1,0 +1,91 @@
+<!-- {% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>HOME</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+
+</head>
+<body>
+    <nav>
+        <div class="nav-left">
+          <a href="{% url 'success' %}" class="current" >HOME</a>
+          <a href="{% url 'add_subject' %}">ADD SUBJECT</a>
+          <a href="{% url 'add_user' %}">ADD USER</a>
+          <a href="{% url 'create_enrollment' %}"> ENROLL</a>
+          <a href="{% url 'user_list' %}">REMOVE USER</a>
+        </div>
+        <div class="nav-right">
+          {% csrf_token %}
+          <a href="{% url 'logout' %}" class="logout">LOGOUT</a>
+        </div>
+    </nav>
+    <br>
+    <br>
+    <br>
+    
+    <h2>Welcome, {{ user.username }}!</h2>
+    <br>
+    <form action="{% url 'lista_predmeta' %}" method="post">
+      {% csrf_token %}
+      <input type="submit" value="list all subjects" style="width: 150px">
+    </form>
+    <form action="{% url 'student_list' %}" method="post" >
+      {% csrf_token %}
+      <input type="submit" value="list all students" style="width: 150px">
+    </form>
+    <form action="{% url 'professor_list' %}" method="post">
+      {% csrf_token %}
+      <input type="submit" value="list all professors" style="width: 150px">
+    </form>
+    <form action="{% url 'subject_list' %}" method="post">
+      {% csrf_token %}
+      <input type="submit" value="Passed students " style="width: 150px">
+    </form>
+</body>
+</html> -->
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Enrollment App</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+</head>
+<body style="background-color:#ccc">
+    <nav>
+        <div class="nav-left">
+          <a href="{% url 'success' %}" class="current">Home</a>
+          <a href="{% url 'add_subject' %}">Add subjects</a>
+          <a href="{% url 'add_user' %}">Add user</a>
+          <a href="{% url 'create_enrollment' %}">Enroll</a>
+
+        </div>
+        <div class="nav-right">
+          <br>
+          Logged in as {{ user.username }}.
+          <a href="{% url 'user_list' %}">Delete user</a>
+          <a href="{% url 'logout' %}" class="logout">Logout</a>
+        </div>
+    </nav>
+    <div style="text-align: center;">
+    <h2>Logged in as an administrator. <br><br>Hello, {{ user.username }}!</h2>
+    <br>
+    <form action="{% url 'lista_predmeta' %}" method="post">
+      {% csrf_token %}
+      <input type="submit" value="Subjects" style="width: 150px">
+    </form>
+    <form action="{% url 'student_list' %}" method="post" >
+      {% csrf_token %}
+      <input type="submit" value="Students" style="width: 150px">
+    </form>
+    <form action="{% url 'professor_list' %}" method="post">
+      {% csrf_token %}
+      <input type="submit" value="Professors" style="width: 150px">
+    </form>
+    <form action="{% url 'subject_list' %}" method="post">
+      {% csrf_token %}
+      <input type="submit" value="Passed" style="width: 150px">
+    </form>
+  </div>
+</body>
+</html>

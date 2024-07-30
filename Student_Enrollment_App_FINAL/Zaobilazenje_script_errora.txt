@@ -1,0 +1,25 @@
+python -m venv venv
+
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+
+& .\venv\Scripts\Activate
+
+pip install django
+
+pip install django-debug-toolbar
+
+python manage.py migrate
+
+
+(((( // ako migrate ne radi
+python manage.py migrate Student_Enrollment_Appzero
+python manage.py makemigrations Student_Enrollment_App -
+python manage.py migrate  )))))
+
+python manage.py loaddata fixtures.json
+
+python manage.py runserver
+
+python manage.py createsuperuser
+
+http://localhost:8000/"url"

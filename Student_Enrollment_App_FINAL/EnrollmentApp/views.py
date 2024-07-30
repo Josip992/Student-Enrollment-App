@@ -21,7 +21,6 @@ def check_professor(user):
 def check_student(user):
      return user.role == 'student'
 
-
 def add_user(request):
     if request.method == 'POST':
         username = request.POST['username']
@@ -40,6 +39,7 @@ def add_user(request):
         user = Korisnici.objects.create_user(username=username, password=password,
                                              first_name=first_name, last_name=last_name,
                                              email=email, role=role, status=status)
+        # Additional processing or redirect to a success page
         return redirect('/success/')
 
     return render(request, 'add_user.html')
@@ -49,7 +49,7 @@ def add_user(request):
 def success_login(request):
     user = request.user
     if user.role == 'administrator':
-        return render(request, 'success_administrator.html', {'user': user})
+        return render(request, 'success.html', {'user': user})
     elif user.role == 'student':
         return render(request, 'success_student.html', {'user': user})
     elif user.role == 'profesor':
@@ -57,9 +57,17 @@ def success_login(request):
     else:
         return redirect('/accounts/login/')
     
+
+# @login_required
+# def logout_view(request):
+#         logout(request)
+#         return redirect('/accounts/login/')
+
+
 @login_required
 def logout_view(request):
     logout(request)
+    # Delete CSRF token (optional)
     rotate_token(request)
     return redirect('/accounts/login/')
     
@@ -117,6 +125,26 @@ def edit_student(request, student_id):
         return redirect('student_list')
     return render(request, 'edit_student.html', {'form': form})
 
+
+# @login_required
+# @user_passes_test(check_admin)
+# def enrollment_list(request, student_id):
+#     student = get_object_or_404(Korisnici, id=student_id)
+#     EnrollmentFormSet = formset_factory(StudentEnrollmentForm, extra=0)
+#     if request.method == 'POST':
+#         formset = EnrollmentFormSet(request.POST)
+#         if formset.is_valid():
+#             for form in formset:
+#                 enrollment = form.save(commit=False)
+#                 enrollment.student = student
+#                 enrollment.save()
+#             return redirect('success')
+#     else:
+#         enrollments = StudentEnrollment.objects.filter(student=student)
+#         initial_data = [{'subject': enrollment.subject, 'status': enrollment.status} for enrollment in enrollments]
+#         formset = EnrollmentFormSet(initial=initial_data)
+#     return render(request, 'enrollment_list.html', {'student': student, 'formset': formset})
+
 @login_required
 @user_passes_test(check_admin)
 def enrollment_list(request, student_id):
@@ -127,7 +155,7 @@ def enrollment_list(request, student_id):
         formset = EnrollmentFormSet(request.POST)
         
         if formset.is_valid():
-            StudentEnrollment.objects.filter(student=student).delete()  
+            StudentEnrollment.objects.filter(student=student).delete()  # Delete existing enrollments for the student
             
             for form in formset:
                 enrollment = form.save(commit=False)
@@ -145,6 +173,7 @@ def enrollment_list(request, student_id):
         'formset': formset
     }
     return render(request, 'enrollment_list.html', context)
+
 
 @login_required
 @user_passes_test(check_admin)
@@ -164,11 +193,27 @@ def create_enrollment(request):
     }
     return render(request, 'create_enrollment.html', context)
 
+
+# @login_required
+# @user_passes_test(check_admin)
+# def edit_enrollment(request, pk):
+#     enrollment = get_object_or_404(StudentEnrollment, pk=pk)
+#     if request.method == 'POST':
+#         form = StudentEnrollmentForm(request.POST, instance=enrollment)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('enrollment_list')
+#     else:
+#         form = StudentEnrollmentForm(instance=enrollment)
+#     return render(request, 'edit_enrollment.html', {'form': form})
+
+
 @login_required
 @user_passes_test(check_admin)
 def professor_list(request):
     professors = Korisnici.get_professors()
     return render(request, 'professor_list.html', {'professors': professors})
+
 
 @login_required
 @user_passes_test(check_admin)
@@ -180,8 +225,9 @@ def edit_professor(request, professor_id):
         return redirect('profesor_list')
     return render(request, 'edit_professor.html', {'form': form})
 
-def home_view(request):
-    return render(request, 'homepage.html')
+
+def cover_view(request):
+    return render(request, 'cover.html')
 
 
 @login_required
@@ -224,7 +270,7 @@ def user_list(request):
 
 @login_required
 @user_passes_test(check_admin)
-def delete_user(request):
+def remove_user(request):
     if request.method == 'POST':
         user_id = request.POST.get('user_id')
         user = Korisnici.objects.get(id=user_id)
@@ -254,6 +300,25 @@ def subject_student_list(request, subject_id):
     }
     return render(request, 'subject_student_list.html', context)
 
+
+# @login_required
+# @user_passes_test(check_professor)
+# def edit_status(request, subject_id, student_id):
+#     student = get_object_or_404(Korisnici, id=student_id, role=Korisnici.RoleChoices.STUDENT.value)
+#     subject = get_object_or_404(Predmeti, id=subject_id)
+#     enrollment = get_object_or_404(StudentEnrollment, student=student, subject=subject)
+
+#     if request.method == 'POST':
+#         form = StudentEnrollmentForm2(request.POST, instance=enrollment)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('subject_student_list', subject_id=subject_id)
+#     else:
+#         form = StudentEnrollmentForm2(instance=enrollment)
+
+#     return render(request, 'edit_status.html', {'form': form, 'subject': subject})
+
+
 @login_required
 @user_passes_test(check_professor)
 def edit_status(request, subject_id, student_id):
@@ -279,6 +344,20 @@ def edit_status(request, subject_id, student_id):
     }
 
     return render(request, 'edit_status.html', context)
+
+
+# def remove_subject_student(request, subject_id, student_id):
+#     student = get_object_or_404(Korisnici, id=student_id, role=Korisnici.RoleChoices.STUDENT.value)
+#     subject = get_object_or_404(Predmeti, id=subject_id)
+#     enrollment = get_object_or_404(StudentEnrollment, student=student, subject=subject)
+
+#     if request.method == 'POST':
+#         enrollment.delete()
+#         messages.success(request, 'Subject and student have been removed successfully.')
+#         return redirect('professor_subjects')
+
+#     return render(request, 'remove_subject_student.html', {'subject': subject, 'student': student})
+
 
 @login_required
 @user_passes_test(check_professor)
@@ -513,86 +592,86 @@ def passed_subject_details(request, subject_id):
 
 
 
-# @login_required
-# @user_passes_test(check_student)
-# def enrollment_success(request):
-#     return render(request, 'enrollment_success.html')
+@login_required
+@user_passes_test(check_student)
+def enrollment_success(request):
+    return render(request, 'enrollment_success.html')
 
-# @login_required
-# @user_passes_test(check_student)
-# def enable_enrollment(request):
-#     if request.method == 'POST':
-#         student_id = request.POST.get('student_id')
-#         subject_id = request.POST.get('subject_id')
+@login_required
+@user_passes_test(check_student)
+def enable_enrollment(request):
+    if request.method == 'POST':
+        student_id = request.POST.get('student_id')
+        subject_id = request.POST.get('subject_id')
 
-#         student = Korisnici.objects.get(id=student_id)
-#         subject = Predmeti.objects.get(id=subject_id)
+        student = Korisnici.objects.get(id=student_id)
+        subject = Predmeti.objects.get(id=subject_id)
 
-#         if student.status == Korisnici.StatusChoices.REDOVAN.value:
-#             if subject.sem_red == 3:
-#                 first_year_subjects = Predmeti.objects.filter(sem_red=1)
-#                 passed_first_year_subjects = StudentEnrollment.objects.filter(
-#                     student=student,
-#                     subject__in=first_year_subjects,
-#                     status=StudentEnrollment.StatusChoices.PASSED.value
-#                 )
+        if student.status == Korisnici.StatusChoices.REDOVAN.value:
+            if subject.sem_red == 3:
+                first_year_subjects = Predmeti.objects.filter(sem_red=1)
+                passed_first_year_subjects = StudentEnrollment.objects.filter(
+                    student=student,
+                    subject__in=first_year_subjects,
+                    status=StudentEnrollment.StatusChoices.PASSED.value
+                )
                 
-#                 if passed_first_year_subjects.count() != first_year_subjects.count():
-#                     return HttpResponse("Ne možete upisati treću godinu")
+                if passed_first_year_subjects.count() != first_year_subjects.count():
+                    return HttpResponse("Ne možete upisati treću godinu")
 
-#         else:
-#             if subject.sem_izv == 4:
-#                 first_year_subjects = Predmeti.objects.filter(sem_red=1)
-#                 second_year_subjects = Predmeti.objects.filter(sem_izv=2)
-#                 passed_second_year_subjects = StudentEnrollment.objects.filter(
-#                     student=student,
-#                     subject__in=second_year_subjects,
-#                     status=StudentEnrollment.StatusChoices.PASSED.value
-#                 )
+        else:
+            if subject.sem_izv == 4:
+                first_year_subjects = Predmeti.objects.filter(sem_red=1)
+                second_year_subjects = Predmeti.objects.filter(sem_izv=2)
+                passed_second_year_subjects = StudentEnrollment.objects.filter(
+                    student=student,
+                    subject__in=second_year_subjects,
+                    status=StudentEnrollment.StatusChoices.PASSED.value
+                )
 
-#                 passed_first_year_subjects = StudentEnrollment.objects.filter(
-#                     student=student,
-#                     subject__in=first_year_subjects,
-#                     status=StudentEnrollment.StatusChoices.PASSED.value
-#                 )
+                passed_first_year_subjects = StudentEnrollment.objects.filter(
+                    student=student,
+                    subject__in=first_year_subjects,
+                    status=StudentEnrollment.StatusChoices.PASSED.value
+                )
                 
-#                 if passed_second_year_subjects.count() != second_year_subjects.count():
-#                     return HttpResponse("Ne možete upisati četvrtu godinu")
+                if passed_second_year_subjects.count() != second_year_subjects.count():
+                    return HttpResponse("Ne možete upisati četvrtu godinu")
                 
-#                 elif passed_first_year_subjects.count() != first_year_subjects.count():
-#                     return HttpResponse("Ne možete upisati četvrtu godinu")
+                elif passed_first_year_subjects.count() != first_year_subjects.count():
+                    return HttpResponse("Ne možete upisati četvrtu godinu")
 
-#         if StudentEnrollment.objects.filter(student=student, subject=subject).exists():
-#             return HttpResponse("Već ste upisani u ovaj predmet.")
+        if StudentEnrollment.objects.filter(student=student, subject=subject).exists():
+            return HttpResponse("Već ste upisani u ovaj predmet.")
 
-#         enrollment = StudentEnrollment(student=student, subject=subject, status=StudentEnrollment.StatusChoices.ENROLLED.value)
-#         enrollment.save()
+        enrollment = StudentEnrollment(student=student, subject=subject, status=StudentEnrollment.StatusChoices.ENROLLED.value)
+        enrollment.save()
 
-#         return redirect('enrollment_success')
-#     else:
-#         student = request.user
+        return redirect('enrollment_success')
+    else:
+        student = request.user
 
-#         if student.status == Korisnici.StatusChoices.REDOVAN.value:
-#             subjects = Predmeti.objects.filter(sem_red=3)
-#         else:
-#             subjects = Predmeti.objects.filter(sem_izv=4)
+        if student.status == Korisnici.StatusChoices.REDOVAN.value:
+            subjects = Predmeti.objects.filter(sem_red=3)
+        else:
+            subjects = Predmeti.objects.filter(sem_izv=4)
 
-#         return render(request, 'enable_enrollment.html', {'subjects': subjects})
+        return render(request, 'enable_enrollment.html', {'subjects': subjects})
 
 
-# def get_final_year_students(request):
-#         final_year_students = 0
-#         regular_students = Korisnici.objects.filter(status=Korisnici.StatusChoices.REDOVAN.value)
-#         regular_students = regular_students.annotate(passed_subjects_count=Count('studentenrollment', filter=Q(studentenrollment__status=StudentEnrollment.StatusChoices.PASSED.value, studentenrollment__subject__sem_red=1)))
-#         regular_students = regular_students.filter(passed_subjects_count=Predmeti.objects.filter(sem_red=1).count())
+def get_final_year_students(request):
+        final_year_students = 0
+        regular_students = Korisnici.objects.filter(status=Korisnici.StatusChoices.REDOVAN.value)
+        regular_students = regular_students.annotate(passed_subjects_count=Count('studentenrollment', filter=Q(studentenrollment__status=StudentEnrollment.StatusChoices.PASSED.value, studentenrollment__subject__sem_red=1)))
+        regular_students = regular_students.filter(passed_subjects_count=Predmeti.objects.filter(sem_red=1).count())
         
-#         non_regular_students = Korisnici.objects.filter(status=Korisnici.StatusChoices.IZVANREDAN.value)
-#         non_regular_students = non_regular_students.annotate(passed_first_year_subjects_count=Count('studentenrollment', filter=Q(studentenrollment__status=StudentEnrollment.StatusChoices.PASSED.value, studentenrollment__subject__sem_red=1)))
-#         non_regular_students = non_regular_students.annotate(passed_second_year_subjects_count=Count('studentenrollment', filter=Q(studentenrollment__status=StudentEnrollment.StatusChoices.PASSED.value, studentenrollment__subject__sem_izv=2)))
-#         non_regular_students = non_regular_students.filter(passed_first_year_subjects_count=Predmeti.objects.filter(sem_red=1).count(), passed_second_year_subjects_count=Predmeti.objects.filter(sem_izv=2).count())
+        non_regular_students = Korisnici.objects.filter(status=Korisnici.StatusChoices.IZVANREDAN.value)
+        non_regular_students = non_regular_students.annotate(passed_first_year_subjects_count=Count('studentenrollment', filter=Q(studentenrollment__status=StudentEnrollment.StatusChoices.PASSED.value, studentenrollment__subject__sem_red=1)))
+        non_regular_students = non_regular_students.annotate(passed_second_year_subjects_count=Count('studentenrollment', filter=Q(studentenrollment__status=StudentEnrollment.StatusChoices.PASSED.value, studentenrollment__subject__sem_izv=2)))
+        non_regular_students = non_regular_students.filter(passed_first_year_subjects_count=Predmeti.objects.filter(sem_red=1).count(), passed_second_year_subjects_count=Predmeti.objects.filter(sem_izv=2).count())
         
-#         final_year_students = regular_students.count() + non_regular_students.count()
+        final_year_students = regular_students.count() + non_regular_students.count()
 
-#         return HttpResponse(f"Broj studenata na šestoj godini: {final_year_students}")
+        return HttpResponse(f"Broj studenata na šestoj godini: {final_year_students}")
 
    

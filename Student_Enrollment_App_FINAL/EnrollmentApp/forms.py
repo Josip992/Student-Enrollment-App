@@ -33,6 +33,7 @@ class StudentEnrollmentForm1(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        # Filter students with role="student"
         self.fields['student'].queryset = Korisnici.objects.filter(role='student')
 
 

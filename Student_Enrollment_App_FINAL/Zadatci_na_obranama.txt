@@ -1,0 +1,5 @@
+1.) Tribalo je napravit novu stranicu na kojoj će se nalazit lista svih predmeta, ukupan broj studenata koji su položili taj predmet, broj redovnih studenata koji su položili predmet i broj izvanrednih studenata koji su položili taj predmet. Ovako je to tribalo izgledat npr:
+Linearna algebra | Položeno: 10 | Redovnih: 7 | Izvanrednih: 3
+
+
+2.) Pored toga treba dodat link ili botun "Detalji" koji će otvorit novu stranicu na kojoj će se ispisat imena i prezimena tih studenata koji su položili predmet. I treba odvojeno ispisat redovne i izvanredne, ono, npr. u dvi odvojene tablice

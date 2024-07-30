@@ -1,0 +1,103 @@
+<!-- from django.shortcuts import render, get_object_or_404
+from django.db.models import Q
+from .models import Predmeti, Korisnici, StudentEnrollment
+
+def pass_counts_details(request, subject_id):
+    subject = get_object_or_404(Predmeti, id=subject_id)
+
+    regular_students = Korisnici.objects.filter(
+        studentenrollment__subject=subject,
+        studentenrollment__status=StudentEnrollment.StatusChoices.PASSED.value,
+        status=Korisnici.StatusChoices.REDOVAN.value
+    )
+
+    part_time_students = Korisnici.objects.filter(
+        studentenrollment__subject=subject,
+        studentenrollment__status=StudentEnrollment.StatusChoices.PASSED.value,
+        status=Korisnici.StatusChoices.IZVANREDAN.value
+    )
+
+    context = {
+        'subject': subject,
+        'regular_students': regular_students,
+        'part_time_students': part_time_students
+    }
+    return render(request, 'pass_counts_details.html', context)
+---------------views.py------------------------------------------------
+from django.urls import path
+from .views import calculate_pass_counts, pass_counts_details
+
+urlpatterns = [
+    path('pass_counts/', calculate_pass_counts, name='pass_counts'),
+    path('pass_counts/details/<int:subject_id>/', pass_counts_details, name='pass_counts_details'),
+    # Other URL patterns...
+]
+-----------------urls.py------------------------------------------------
+<table>
+    <tr>
+      <th>Subject</th>
+      <th>Total Passed</th>
+      <th>Regular Students Passed</th>
+      <th>Part-time Students Passed</th>
+      <th>Details</th>
+    </tr>
+    {% for subject in subjects %}
+      <tr>
+        <td>{{ subject.name }}</td>
+        <td>{{ subject.total_passed }}</td>
+        <td>{{ subject.regular_students_passed }}</td>
+        <td>{{ subject.part_time_students_passed }}</td>
+        <td><a href="{% url 'pass_counts_details' subject.id %}">Details</a></td>
+      </tr>
+    {% empty %}
+      <tr>
+        <td colspan="5">No subjects found.</td>
+      </tr>
+    {% endfor %}
+  </table>
+----------------pass_counts.html--------------------------------
+<h2>Regular Students</h2>
+<ul>
+  {% for student in regular_students %}
+    <li>{{ student.first_name }} {{ student.last_name }}</li>
+  {% empty %}
+    <li>No regular students found.</li>
+  {% endfor %}
+</ul>
+
+<h2>Part-time Students</h2>
+<ul>
+  {% for student in part_time_students %}
+    <li>{{ student.first_name }} {{ student.last_name }}</li>
+  {% empty %}
+    <li>No part-time students found.</li>
+  {% endfor %}
+</ul>
+----------------------pass_count_details------------------------------- -->
+<!-- ------------------------------------------------------------------------------------------------------------
+For the Korisnici model:
+
+Korisnici.objects.all(): Retrieves all instances of the Korisnici model.
+Korisnici.objects.get(**kwargs): Retrieves a single instance of the Korisnici model that matches the specified lookup parameters.
+Korisnici.objects.filter(**kwargs): Retrieves a queryset of instances of the Korisnici model that match the specified lookup parameters.
+Korisnici.objects.create(**kwargs): Creates a new instance of the Korisnici model with the provided field values.
+Korisnici.objects.update(**kwargs): Updates the field values of the instances of the Korisnici model that match the specified lookup parameters.
+Korisnici.objects.delete(): Deletes the instances of the Korisnici model that match the specified lookup parameters.
+Korisnici.get_students(): Retrieves all instances of the Korisnici model with the role set as "student".
+Korisnici.get_professors(): Retrieves all instances of the Korisnici model with the role set as "profesor".
+For the Predmeti model:
+
+Predmeti.objects.all(): Retrieves all instances of the Predmeti model.
+Predmeti.objects.get(**kwargs): Retrieves a single instance of the Predmeti model that matches the specified lookup parameters.
+Predmeti.objects.filter(**kwargs): Retrieves a queryset of instances of the Predmeti model that match the specified lookup parameters.
+Predmeti.objects.create(**kwargs): Creates a new instance of the Predmeti model with the provided field values.
+Predmeti.objects.update(**kwargs): Updates the field values of the instances of the Predmeti model that match the specified lookup parameters.
+Predmeti.objects.delete(): Deletes the instances of the Predmeti model that match the specified lookup parameters.
+For the StudentEnrollment model:
+
+StudentEnrollment.objects.all(): Retrieves all instances of the StudentEnrollment model.
+StudentEnrollment.objects.get(**kwargs): Retrieves a single instance of the StudentEnrollment model that matches the specified lookup parameters.
+StudentEnrollment.objects.filter(**kwargs): Retrieves a queryset of instances of the StudentEnrollment model that match the specified lookup parameters.
+StudentEnrollment.objects.create(**kwargs): Creates a new instance of the StudentEnrollment model with the provided field values.
+StudentEnrollment.objects.update(**kwargs): Updates the field values of the instances of the StudentEnrollment model that match the specified lookup parameters.
+StudentEnrollment.objects.delete(): Deletes the instances of the StudentEnrollment model that match the specified lookup parameters. -->
