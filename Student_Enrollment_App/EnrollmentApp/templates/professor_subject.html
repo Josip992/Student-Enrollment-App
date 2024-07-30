@@ -1,0 +1,45 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Enrollment App</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+</head>
+<body style="background-color:#ccc">
+    <nav>
+        <div class="nav-left">
+            <a href="{% url 'success' %}">Home</a>
+            <a href="{% url 'professor_subjects' %}" class="current">Subjects</a>
+        </div>
+        <div class="nav-right">
+            <br>
+            Logged in as {{ user.username }}.
+            <a href="{% url 'user_list' %}">Delete user</a>
+            <a href="{% url 'logout' %}" class="logout">Logout</a>
+        </div>
+    </nav>
+    <h2>List of {{ user.username }}'s subjects</h2>
+    <ul>
+        {% for subject in list %}
+            <li>
+                <b>{{ subject.name }}</b>
+                <br><br>
+                <a href="{% url 'subject_student_list' subject.id %}" class="list">Student List</a>
+                <br><br>
+                <a href="{% url 'subject_passed_students' subject.id %}" class="list">Passed Students</a>
+                <br><br>
+                <a href="{% url 'subject_enrolled_students' subject.id %}" class="list">Enrolled Students</a>
+                <br><br>
+                <a href="{% url 'subject_failed_students' subject.id %}" class="list">Failed Students</a>
+                <br><br>
+                <a href="{% url 'subject_details' subject.id %}" class="list">Details</a>
+                <br><br>
+            </li>
+            <hr>
+            <br>
+        {% empty %}
+            <li>No subjects assigned to the professor.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

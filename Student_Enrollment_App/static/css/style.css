@@ -1,0 +1,146 @@
+.form_container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; 
+}
+
+.form_container label {
+  display: inline-block;
+  width: 150px;
+  text-align: left;
+  margin-right: 10px;
+}
+
+.form_container input, .form_container select {
+  width: 200px;
+}
+
+.form_container input,
+.form_container select {
+    width: 200px;
+}
+
+.form_container .submit_btn {
+    margin-top: 25px;
+    position: absolute;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #ccc;
+  margin: 0px;
+  padding: 0px;
+  background-image: url('/static/images/odjel11.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+form {
+  margin-bottom: 20px;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="number"],
+select {
+  padding: 5px;
+  margin-bottom: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  width: 200px;
+}
+
+input[type="submit"] {
+  background-color: #5700c9;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+input[type="submit"]:hover {
+  background-color: wheat;
+}
+
+input[type="submit"]:hover {
+  background-color: #271b41;
+  color: wheat;
+}
+
+nav {
+  position: fixed;
+  overflow: hidden;
+  top: 0;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  background-color: #362b50;
+  color: rgb(245, 239, 238);
+  z-index: 100;
+}
+
+.nav-left {
+  display: flex;
+}
+
+.nav-right {
+  margin-left: auto;
+}
+
+nav a {
+  text-align: center;
+  padding: 14px;
+  text-decoration: none;
+  font-size: 17px;
+  overflow: hidden;
+  color: rgb(245, 239, 238);
+}
+
+nav a:hover {
+  background-color: #271b41;
+  color: wheat;
+}
+
+nav a:active {
+  background-color: #473277;
+}
+
+.current {
+  background-color: #ccc;
+  color: black;
+}
+
+.predmet-info {
+  display: flex;
+  align-items: center;
+}
+
+.predmet-info h2,
+.predmet-info p,
+.predmet-info a {
+  margin-right: 10px;
+}
+
+.logout:hover {
+  background-color: #271b41;
+  color: wheat;
+}
+
+.list:hover {
+  background-color: #ccc;
+  color: #362b50;
+}
+
+.list {
+  text-decoration: none;
+}
+
+textarea {
+  width:195px;
+  height: 85px;
+}

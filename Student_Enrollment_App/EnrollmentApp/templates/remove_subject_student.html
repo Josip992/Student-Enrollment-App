@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Student Enrollment App</title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{% static 'css/style.css' %}"
+    />
+  </head>
+  <body style="background-color:#ccc">
+    <nav>
+      <div class="nav-left">
+        <a href="{% url 'success' %}">Home</a>
+        <a href="javascript:history.back()" >Return</a> 
+      </div>
+      <div class="nav-right">
+        <br>
+        Logged in as {{ user.username }}.
+        <a href="{% url 'user_list' %}">Delete user</a>
+        <a href="{% url 'logout' %}" class="logout">Logout</a>
+      </div>
+    </nav>
+    <br><br><br>
+    <h2>Confirm Removal</h2>
+    {% if student.first_name %}
+    <p>
+      Are you sure you want to remove {{ student.first_name }} {{student.last_name }} from {{ subject.name }}?
+    </p>
+    {% else %}
+    <p>Do you want to unsubscribe from {{ subject.name }}?</p>
+    {% endif %}
+    <form method="POST">
+      {% csrf_token %}
+      <input type="submit" value="remove" />
+    </form>
+  </body>
+</html>

@@ -1,0 +1,37 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Enrollment App</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+</head>
+<body style="background-color:#ccc">
+    <nav>
+        <div class="nav-left">
+            <a href="{% url 'success' %}">Home</a>
+            <a href="{% url 'professor_subjects' %}">Subject</a>
+
+        </div>
+        <div class="nav-right">
+            <br>
+            Logged in as {{ user.username }}.
+            <a href="{% url 'user_list' %}">Delete user</a>
+            <a href="{% url 'logout' %}" class="logout">Logout</a>
+        </div>
+    </nav>
+    <br>
+    <br>
+    <br>
+    <h2> Students who enrolled in {{ subject.name }}</h2>
+    {% if enrolled_students %}
+        <ul>
+            {% for student in enrolled_students %}
+                <li>{{ student.first_name }} {{ student.last_name }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No students enrolled for this subject.</p>
+    {% endif %}
+</body>
+</html>

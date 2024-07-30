@@ -1,0 +1,60 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Enrollment App</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    <style>
+        table, th, tr, td {
+            border: 1px solid
+            }
+    </style>
+
+</head>
+<body style="background-color:#ccc">
+    <nav>
+        <div class="nav-left">
+            <a href="{% url 'success' %}">Home</a>
+            <a href="{% url 'add_subject' %}">Add subject</a>
+            <a href="{% url 'add_user' %}">Add user</a>
+            <a href="{% url 'create_enrollment' %}">Enroll student</a>
+        </div>
+        <div class="nav-right">
+            {% csrf_token %}
+            <br>
+            Logged in as {{ user.username }}.
+            <a href="{% url 'user_list' %}">Delete user</a>
+            <a href="{% url 'logout' %}" class="logout">Logout</a>
+        </div>
+    </nav>
+    <br>
+    <br>
+    <br>
+    <h1>User List</h1>
+    {% for user in users %}
+    <div class="user-row">
+        <div class="user-field">
+            <label>Username:</label>
+            <span>{{ user.username }}</span>
+        </div>
+        <div class="user-field">
+            <label>Role:</label>
+            <span>{{ user.get_role_display }}</span>
+        </div>
+        <div class="user-field">
+            <label>Status:</label>
+            <span>{{ user.get_status_display }}</span>
+        </div>
+        <div class="user-field">
+            <form method="POST" action="{% url 'remove_user' %}">
+                {% csrf_token %}
+                <input type="hidden" name="user_id" value="{{ user.id }}">
+                <input type="submit" value="Delete">
+            </form>
+        </div>
+    </div>
+{% empty %}
+    <p>No users found.</p>
+{% endfor %}
+</body>
+</html>
